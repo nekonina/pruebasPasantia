@@ -1,4 +1,4 @@
-from sklearn import datasets
+from sklearn import svm, datasets
 from sklearn.model_selection import GridSearchCV
 from sklearn.cluster import KMeans
 import pandas as pd
@@ -6,7 +6,7 @@ from time import perf_counter
 
 iris = datasets.load_iris()
 
-parameters1 = {'init':('k-means++', 'random'), 'n_init':list(range(10,21)), 'n_clusters': list(range(3,11)), 'max_iter':list(range(200,600, 100))}
+parameters1 = {'init':('k-means++', 'random'), 'n_init':list(range(10,16)), 'n_clusters': list(range(3,11)), 'max_iter':list(range(200,600, 100))}
 kmean = KMeans()
 estimador = GridSearchCV(kmean, parameters1)
 estimador.fit(iris.data)
