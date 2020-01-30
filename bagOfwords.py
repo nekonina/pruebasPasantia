@@ -5,7 +5,7 @@ Created on Wed Jan 15 10:05:35 2020
 
 @author: ubicutus-010
 """
-
+from time import perf_counter 
 import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -25,6 +25,7 @@ def memory_usage_psutil():
 def bagOfWords(listWord):
     count = CountVectorizer()
     temp = count.fit_transform(listWord)
+    print(count.vocabulary_)
     final = temp.toarray().tolist()
     return final
     

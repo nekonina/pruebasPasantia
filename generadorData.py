@@ -84,7 +84,7 @@ valor =[]
 countViewInfo = []
 nviewInfo = []
 
-for i in range(20):
+for i in range(25):
     triviaMaxCompT = getAttr(maxCompetitors,1)
     triviaChoiceQuantityT = getAttr(choiceQuantity,1)
     triviaRightChoicesQuantityT = randint(1,triviaChoiceQuantityT)
@@ -184,5 +184,9 @@ trivias = pd.DataFrame(dataOriginal)
 #trivias.to_csv('1000Trivias_1.csv', index=False)
 #trivias.to_csv('3000Trivias.csv', index=False)
 #trivias.to_csv('3000Trivias_1.csv', index=False)
-#trivias.to_csv('5000Trivias.csv', index=False)
-#trivias.to_csv('5000Trivias_1.csv', index=False)
+#trivias.to_csv('250Trivias.csv', index=False)
+#trivias.to_csv('250Trivias_1.csv', index=False)
+#trivias.to_csv('50Trivias.csv', index=False)
+#trivias.to_csv('50Trivias_1.csv', index=False)
+#trivias.to_csv('25Trivias.csv', index=False)
+#trivias.to_csv('25Trivias_1.csv', index=False)
