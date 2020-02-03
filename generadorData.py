@@ -9,6 +9,8 @@ from random import randint
 import pandas as pd
 from sklearn import preprocessing
 from sklearn.feature_extraction.text import CountVectorizer
+import numpy as np
+from sklearn.preprocessing import StandardScaler
 
 categorias = ['Deporte', 'cineYTelevision','series','Musica','CulturaGeneral','Infantil','juvenil','culinario','vidaNocturna','personalidades']
 segmentos = ['hombres', 'mujeres', 'ninos', 'jovenes', 'adultosJovenes','adultos','mayores', 'publicoGeneral']
@@ -23,12 +25,19 @@ questionQuantity = [1,2,3,4,5,6,7,8,9,10]
 choiceQuantity = [1,2,3,4]
 rightChoicesQuantity = [1,2,3,4]
 nwWinner = [1,2,3,4,5,6,7,8,9,10]
-vistglobal = [1,2,5,10,15,20,25,30,35,40] 
+vistglobal = [1,2,5,10,15,20,25,30,35,40]
+
+n = 250
 
 def bagOfWords(listWord):
     count = CountVectorizer()
     temp = count.fit_transform(listWord)
-    final = temp.toarray().tolist()
+    #final = temp.toarray().tolist()
+    
+    feature_names = count.get_feature_names()
+    final = pd.DataFrame(temp.toarray(), columns=feature_names)
+    #final = getColums(final, final.shape[0])
+    
     return final 
     
 def getAttr(lista, limite = 10):
@@ -41,7 +50,6 @@ def getAttr(lista, limite = 10):
         i = 0
         while (i<nelementos):
             index = randint(0,lenlista-1)
-            print(index)
             if not nuevo  or not(lista[index] in nuevo):
                 nuevo = nuevo +' '+ lista[index]
                 i+=1
@@ -64,129 +72,155 @@ def getPorcentaje(valor):
     npersonas = randint(1,nmax)
     return npersonas / nmax, npersonas
 
-triviasCategoria = []
-triviasSegmentos = []
-triviasActividades = []
-triviasPalabras = []
-triviasMarcas = []
-triviaMaxComp = []
-trivianPrizes = []
-triviaQuestionType = []
-triviaQuestionQuantity = []
-triviaChoiceQuantity = []
-triviaRightChoicesQuantity = []
-triviaNwWinner = []
-triviaPremios = []
-triviaPorcentaje = []
-triviaSuscritos = []
-triviasDesuscritos = []
-valor =[]
-countViewInfo = []
-nviewInfo = []
+def getColums(df, nfilas):
+    nombres = list(df)
+    minimo = nfilas * 0.3
+    print('el minimo es:', minimo)
+    eliminar = []
+    for i in nombres:
+        n = df[i].sum()
+        print('para: ',i,'tiene: ', n)
+        if n <= minimo:
+            eliminar.append(i)
+    df = df.drop(eliminar, axis= 1)
+    
+    return df
 
-for i in range(25):
-    triviaMaxCompT = getAttr(maxCompetitors,1)
-    triviaChoiceQuantityT = getAttr(choiceQuantity,1)
-    triviaRightChoicesQuantityT = randint(1,triviaChoiceQuantityT)
-    triviaNwWinnerT = getAttr(nwWinner,1)
-    triviaPorcentajeT, triviasuscritosT = getPorcentaje(triviaMaxCompT)
-    desuscritos = round(triviaMaxCompT * 0.2)
-    triviasDesuscritosT = randint(0,desuscritos)
-    triviaValor = randint(-2,4)
-    if triviaValor == 0:
-        vistasGlobales = 0
-        nviewInfo.append(0)
-    else:
-        vistasGlobales = getAttr(vistglobal,1)
-        limvistasUsuario = round(vistasGlobales * 0.5)
-        if limvistasUsuario < 2:
-            vistasUsuarios = 1
+def get(n):
+    triviasCategoria = []
+    triviasSegmentos = []
+    triviasActividades = []
+    triviasPalabras = []
+    triviasMarcas = []
+    triviaMaxComp = []
+    trivianPrizes = []
+    triviaQuestionType = []
+    triviaQuestionQuantity = []
+    triviaChoiceQuantity = []
+    triviaRightChoicesQuantity = []
+    triviaNwWinner = []
+    triviasPremios = []
+    triviaPorcentaje = []
+    triviaSuscritos = []
+    triviasDesuscritos = []
+    valor =[]
+    countViewInfo = []
+    nviewInfo = []
+    
+    for i in range(n):
+        triviaMaxCompT = getAttr(maxCompetitors,1)
+        triviaChoiceQuantityT = getAttr(choiceQuantity,1)
+        triviaRightChoicesQuantityT = randint(1,triviaChoiceQuantityT)
+        triviaNwWinnerT = getAttr(nwWinner,1)
+        triviaPorcentajeT, triviasuscritosT = getPorcentaje(triviaMaxCompT)
+        desuscritos = round(triviaMaxCompT * 0.2)
+        triviasDesuscritosT = randint(0,desuscritos)
+        triviaValor = randint(-2,4)
+        if triviaValor == 0:
+            vistasGlobales = 0
+            nviewInfo.append(0)
         else:
-            vistasUsuarios =  randint(1,limvistasUsuario)
-        nviewInfo.append(vistasUsuarios)
+            vistasGlobales = getAttr(vistglobal,1)
+            limvistasUsuario = round(vistasGlobales * 0.5)
+            if limvistasUsuario < 2:
+                vistasUsuarios = 1
+            else:
+                vistasUsuarios =  randint(1,limvistasUsuario)
+            nviewInfo.append(vistasUsuarios)
+        
+        
+        triviasCategoria.append(getAttr(categorias))
+        triviasSegmentos.append(getAttr(segmentos,3))
+        triviasActividades.append(getAttr(actividades))
+        triviasPalabras.append(getAttr(palabras))
+        triviasMarcas.append(getAttr(marcas))
+        triviaMaxComp.append(triviaMaxCompT)
+        trivianPrizes.append(getAttr(nPrizes,1))
+        triviaQuestionType.append(getAttr(questionType,1))
+        triviaQuestionQuantity.append( getAttr(questionQuantity,1))
+        triviaChoiceQuantity.append(triviaChoiceQuantityT)
+        triviaRightChoicesQuantity.append(triviaRightChoicesQuantityT)
+        triviaNwWinner.append(triviaNwWinnerT)
+        triviasPremios.append(getPremios(premios, triviaNwWinnerT))
+        triviaPorcentaje.append(triviaPorcentajeT)
+        triviaSuscritos.append(triviasuscritosT)
+        triviasDesuscritos.append(triviasDesuscritosT)
+        valor.append(triviaValor)
+        countViewInfo.append(vistasGlobales)
+        
+    triviasCategoria = bagOfWords(triviasCategoria) 
+    triviasSegmentos = bagOfWords(triviasSegmentos) 
+    triviasActividades = bagOfWords(triviasActividades) 
+    triviasPalabras = bagOfWords(triviasPalabras) 
+    triviasMarcas = bagOfWords(triviasMarcas)
+    triviasPremios = bagOfWords(triviasPremios)
+    
+    trivias = pd.concat([triviasCategoria, triviasSegmentos], axis=1,)
+    trivias = pd.concat([trivias, triviasActividades], axis=1,)
+    trivias = pd.concat([trivias, triviasPalabras], axis=1,)
+    trivias = pd.concat([trivias, triviasMarcas], axis=1,)
+    trivias = pd.concat([trivias, triviasPremios], axis=1,)
+    
+    #CON NORMALIZACION
+    
+#    prePro = [triviaMaxComp, trivianPrizes, triviaQuestionType, triviaQuestionQuantity,triviaChoiceQuantity,triviaRightChoicesQuantity, triviaNwWinner, triviaSuscritos, triviasDesuscritos,valor, countViewInfo, nviewInfo]
+#    prePro = preprocessing.normalize(prePro, norm= 'l2').tolist()
+#    triviaMaxComp= prePro[0]
+#    trivianPrizes= prePro[1]
+#    triviaQuestionType= prePro[2]
+#    triviaQuestionQuantity= prePro[3]
+#    triviaChoiceQuantity= prePro[4]
+#    triviaRightChoicesQuantity= prePro[5]
+#    triviaNwWinner= prePro[6]
+#    triviaSuscritos= prePro[7]
+#    triviasDesuscritos= prePro[8]
+#    valor= prePro[9]
+#    countViewInfo= prePro[10]
+#    nviewInfo = prePro[11]
+    
+    dataOriginal = {
+            'triviaMaxComp' : triviaMaxComp,
+            'trivianPrizes' : trivianPrizes,
+            'triviaQuestionType' : triviaQuestionType,
+            'triviaQuestionQuantity' : triviaQuestionQuantity,
+            'triviaChoiceQuantity' : triviaChoiceQuantity,
+            'triviaRightChoicesQuantity' : triviaRightChoicesQuantity,
+            'triviaNwWinner' : triviaNwWinner,
+            'triviaPorcentaje' : triviaPorcentaje,
+            'triviaSuscritos' : triviaSuscritos,
+            'triviasDesuscritos' : triviasDesuscritos,
+            'valorUser': valor,
+            'countViewInfoUser': countViewInfo,
+            'nviewInfo' : nviewInfo,
+            }
     
     
-    triviasCategoria.append(getAttr(categorias))
-    triviasSegmentos.append(getAttr(segmentos,3))
-    triviasActividades.append(getAttr(actividades))
-    triviasPalabras.append(getAttr(palabras))
-    triviasMarcas.append(getAttr(marcas))
-    triviaMaxComp.append(triviaMaxCompT)
-    trivianPrizes.append(getAttr(nPrizes,1))
-    triviaQuestionType.append(getAttr(questionType,1))
-    triviaQuestionQuantity.append( getAttr(questionQuantity,1))
-    triviaChoiceQuantity.append(triviaChoiceQuantityT)
-    triviaRightChoicesQuantity.append(triviaRightChoicesQuantityT)
-    triviaNwWinner.append(triviaNwWinnerT)
-    triviaPremios.append(getPremios(premios, triviaNwWinnerT))
-    triviaPorcentaje.append(triviaPorcentajeT)
-    triviaSuscritos.append(triviasuscritosT)
-    triviasDesuscritos.append(triviasDesuscritosT)
-    valor.append(triviaValor)
-    countViewInfo.append(vistasGlobales)
+    dataNumerica = pd.DataFrame(dataOriginal)
     
-
-triviasCategoria = bagOfWords(triviasCategoria) 
-triviasSegmentos = bagOfWords(triviasSegmentos) 
-triviasActividades = bagOfWords(triviasActividades) 
-triviasPalabras = bagOfWords(triviasPalabras) 
-triviasMarcas = bagOfWords(triviasMarcas)
-triviaPremios = bagOfWords(triviaPremios)
-
-prePro = [triviaMaxComp, trivianPrizes, triviaQuestionType, triviaQuestionQuantity,triviaChoiceQuantity,triviaRightChoicesQuantity, triviaNwWinner, triviaSuscritos, triviasDesuscritos,valor, countViewInfo, nviewInfo]
-prePro = preprocessing.normalize(prePro, norm= 'l2').tolist()
-triviaMaxComp= prePro[0]
-trivianPrizes= prePro[1]
-triviaQuestionType= prePro[2]
-triviaQuestionQuantity= prePro[3]
-triviaChoiceQuantity= prePro[4]
-triviaRightChoicesQuantity= prePro[5]
-triviaNwWinner= prePro[6]
-triviaSuscritos= prePro[7]
-triviasDesuscritos= prePro[8]
-valor= prePro[9]
-countViewInfo= prePro[10]
-nviewInfo = prePro[11]
-
-dataOriginal = {
-        'triviasCategoria' : triviasCategoria,
-        'triviasSegmentos' : triviasSegmentos,
-        'triviasActividades' : triviasActividades,
-        'triviasPalabras' : triviasPalabras,
-        'triviasMarcas' : triviasMarcas,
-        'triviaMaxComp' : triviaMaxComp,
-        'trivianPrizes' : trivianPrizes,
-        'triviaQuestionType' : triviaQuestionType,
-        'triviaQuestionQuantity' : triviaQuestionQuantity,
-        'triviaChoiceQuantity' : triviaChoiceQuantity,
-        'triviaRightChoicesQuantity' : triviaRightChoicesQuantity,
-        'triviaNwWinner' : triviaNwWinner,
-        'triviaPremios' : triviaPremios,
-        'triviaPorcentaje' : triviaPorcentaje,
-        'triviaSuscritos' : triviaSuscritos,
-        'triviasDesuscritos' : triviasDesuscritos,
-        'valorUser': valor,
-        'countViewInfoUser': countViewInfo,
-        'nviewInfo' : nviewInfo,
-        }
-
-
-trivias = pd.DataFrame(dataOriginal)
+    #CON SCALADO
+    prePro = StandardScaler().fit_transform(dataNumerica)
+    
+    dataOriginal['triviaMaxComp']= prePro[0]
+    dataOriginal['trivianPrizes']= prePro[1]
+    dataOriginal['triviaQuestionType']= prePro[2]
+    dataOriginal['triviaQuestionQuantity']= prePro[3]
+    dataOriginal['triviaChoiceQuantity']= prePro[4]
+    dataOriginal['triviaRightChoicesQuantity']= prePro[5]
+    dataOriginal['triviaNwWinner']= prePro[6]
+    dataOriginal['triviaSuscritos']= prePro[7]
+    dataOriginal['triviasDesuscritos']= prePro[8]
+    dataOriginal['valor']= prePro[9]
+    dataOriginal['countViewInfo']= prePro[10]
+    dataOriginal[' nviewInfo'] = prePro[11]
+    
+    trivias = pd.concat([trivias, dataNumerica], axis=1,)
+    return trivias
 
 # Guarda datos en CSV:
-#trivias.to_csv('2000Trivias.csv', index=False)
-#trivias.to_csv('2000Trivias_1.csv', index=False)
-#trivias.to_csv('500Trivias.csv', index=False)
-#trivias.to_csv('500Trivias_1.csv', index=False)
-#trivias.to_csv('500Trivias_2.csv', index=False)
-#trivias.to_csv('500Trivias_3.csv', index=False)
-#trivias.to_csv('1000Trivias.csv', index=False)
-#trivias.to_csv('1000Trivias_1.csv', index=False)
-#trivias.to_csv('3000Trivias.csv', index=False)
-#trivias.to_csv('3000Trivias_1.csv', index=False)
-#trivias.to_csv('250Trivias.csv', index=False)
-#trivias.to_csv('250Trivias_1.csv', index=False)
-#trivias.to_csv('50Trivias.csv', index=False)
-#trivias.to_csv('50Trivias_1.csv', index=False)
-#trivias.to_csv('25Trivias.csv', index=False)
-#trivias.to_csv('25Trivias_1.csv', index=False)
+name = str(n) + 'TriviasAlmScalada.csv'
+trivias = get(n)
+trivias.to_csv(name, index=False)
+
+name1 = str(n) + 'TriviasAlmScalada_1.csv'
+trivias1 = get(n)
+trivias1.to_csv(name1, index=False)
