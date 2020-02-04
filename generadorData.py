@@ -163,20 +163,20 @@ def get(n):
     
     #CON NORMALIZACION
     
-#    prePro = [triviaMaxComp, trivianPrizes, triviaQuestionType, triviaQuestionQuantity,triviaChoiceQuantity,triviaRightChoicesQuantity, triviaNwWinner, triviaSuscritos, triviasDesuscritos,valor, countViewInfo, nviewInfo]
-#    prePro = preprocessing.normalize(prePro, norm= 'l2').tolist()
-#    triviaMaxComp= prePro[0]
-#    trivianPrizes= prePro[1]
-#    triviaQuestionType= prePro[2]
-#    triviaQuestionQuantity= prePro[3]
-#    triviaChoiceQuantity= prePro[4]
-#    triviaRightChoicesQuantity= prePro[5]
-#    triviaNwWinner= prePro[6]
-#    triviaSuscritos= prePro[7]
-#    triviasDesuscritos= prePro[8]
-#    valor= prePro[9]
-#    countViewInfo= prePro[10]
-#    nviewInfo = prePro[11]
+    prePro = [triviaMaxComp, trivianPrizes, triviaQuestionType, triviaQuestionQuantity,triviaChoiceQuantity,triviaRightChoicesQuantity, triviaNwWinner, triviaSuscritos, triviasDesuscritos,valor, countViewInfo, nviewInfo]
+    prePro = preprocessing.normalize(prePro, norm= 'l2').tolist()
+    triviaMaxComp= prePro[0]
+    trivianPrizes= prePro[1]
+    triviaQuestionType= prePro[2]
+    triviaQuestionQuantity= prePro[3]
+    triviaChoiceQuantity= prePro[4]
+    triviaRightChoicesQuantity= prePro[5]
+    triviaNwWinner= prePro[6]
+    triviaSuscritos= prePro[7]
+    triviasDesuscritos= prePro[8]
+    valor= prePro[9]
+    countViewInfo= prePro[10]
+    nviewInfo = prePro[11]
     
     dataOriginal = {
             'triviaMaxComp' : triviaMaxComp,
@@ -217,10 +217,10 @@ def get(n):
     return trivias
 
 # Guarda datos en CSV:
-name = str(n) + 'TriviasAlmScalada.csv'
+name = str(n) + 'TriviasScaNor.csv'
 trivias = get(n)
 trivias.to_csv(name, index=False)
 
-name1 = str(n) + 'TriviasAlmScalada_1.csv'
+name1 = str(n) + 'TriviasScaNor_1.csv'
 trivias1 = get(n)
 trivias1.to_csv(name1, index=False)
