@@ -196,31 +196,39 @@ def get(n):
     
     
     dataNumerica = pd.DataFrame(dataOriginal)
-    
     #CON SCALADO
     prePro = StandardScaler().fit_transform(dataNumerica)
+    columns = ['triviaMaxComp',
+            'trivianPrizes' ,
+            'triviaQuestionType' ,
+            'triviaQuestionQuantity' ,
+            'triviaChoiceQuantity' ,
+            'triviaRightChoicesQuantity',
+            'triviaNwWinner',
+            'triviaPorcentaje' ,
+            'triviaSuscritos',
+            'triviasDesuscritos' ,
+            'valorUser',
+            'countViewInfoUser',
+            'nviewInfo']
     
-    dataOriginal['triviaMaxComp']= prePro[0]
-    dataOriginal['trivianPrizes']= prePro[1]
-    dataOriginal['triviaQuestionType']= prePro[2]
-    dataOriginal['triviaQuestionQuantity']= prePro[3]
-    dataOriginal['triviaChoiceQuantity']= prePro[4]
-    dataOriginal['triviaRightChoicesQuantity']= prePro[5]
-    dataOriginal['triviaNwWinner']= prePro[6]
-    dataOriginal['triviaSuscritos']= prePro[7]
-    dataOriginal['triviasDesuscritos']= prePro[8]
-    dataOriginal['valor']= prePro[9]
-    dataOriginal['countViewInfo']= prePro[10]
-    dataOriginal[' nviewInfo'] = prePro[11]
+    dataNumerica = pd.DataFrame(prePro,columns = columns)
+    
     
     trivias = pd.concat([trivias, dataNumerica], axis=1,)
     return trivias
 
 # Guarda datos en CSV:
-name = str(n) + 'TriviasScaNor.csv'
+name = str(n) + 'TriviasNorSca.csv'
 trivias = get(n)
 trivias.to_csv(name, index=False)
 
-name1 = str(n) + 'TriviasScaNor_1.csv'
-trivias1 = get(n)
-trivias1.to_csv(name1, index=False)
+
+## Guarda datos en CSV:
+#name = str(n) + 'TriviasScaNor.csv'
+#trivias = get(n)
+#trivias.to_csv(name, index=False)
+#
+#name1 = str(n) + 'TriviasScaNor_1.csv'
+#trivias1 = get(n)
+#trivias1.to_csv(name1, index=False)
