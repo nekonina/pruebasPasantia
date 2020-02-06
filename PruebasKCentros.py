@@ -18,26 +18,26 @@ parameters = {'init':('k-means++', 'random'), 'n_init':list(range(10,16)), 'n_cl
 kmean = KMeans()
 
 # CORRER LOS CASOS SIN PASAR LA DATA POR EL PCA
-for i in range(5):
-    estimador = GridSearchCV(kmean, parameters)
-    suscritas = pd.read_csv('250TriviasSca.csv')
-    t1_start = perf_counter()
-    
-    estimador.fit(suscritas)
-    
-    t1_stop = perf_counter()
-    print("Elapsed time: ", t1_stop-t1_start)
-    
-    #encontrar el mejor estimador:
-    print(estimador.best_estimator_)
-    
-    print("The average silhouette_score is :", silhouette_score(suscritas, estimador.best_estimator_.labels_))
-    
+#for i in range(5):
+estimador = GridSearchCV(kmean, parameters)
+suscritas = pd.read_csv('250TriviasSca.csv')
+t1_start = perf_counter()
+
+estimador.fit(suscritas)
+
+t1_stop = perf_counter()
+print("Elapsed time: ", t1_stop-t1_start)
+
+#encontrar el mejor estimador:
+print(estimador.best_estimator_)
+
+print("The average silhouette_score is :", silhouette_score(suscritas, estimador.best_estimator_.labels_))
+
 
 #CORRER LOS CASOS PASANDOLOS POR EL PCA
 for i in range(5):
     suscritas = pd.read_csv('250TriviasSca.csv')
-    pca = PCA(.9)
+    pca = PCA(.99)
     pca.fit(suscritas)
     susc = pca.transform(suscritas)
     susc = pd.DataFrame(susc)
