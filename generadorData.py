@@ -27,7 +27,7 @@ rightChoicesQuantity = [1,2,3,4]
 nwWinner = [1,2,3,4,5,6,7,8,9,10]
 vistglobal = [1,2,5,10,15,20,25,30,35,40]
 
-n = 250
+n = 1000
 
 def bagOfWords(listWord):
     count = CountVectorizer()
@@ -162,22 +162,22 @@ def get(n):
     trivias = pd.concat([trivias, triviasPremios], axis=1,)
     
     #CON NORMALIZACION
-    
-    prePro = [triviaMaxComp, trivianPrizes, triviaQuestionType, triviaQuestionQuantity,triviaChoiceQuantity,triviaRightChoicesQuantity, triviaNwWinner, triviaSuscritos, triviasDesuscritos,valor, countViewInfo, nviewInfo]
-    prePro = preprocessing.normalize(prePro, norm= 'l2').tolist()
-    triviaMaxComp= prePro[0]
-    trivianPrizes= prePro[1]
-    triviaQuestionType= prePro[2]
-    triviaQuestionQuantity= prePro[3]
-    triviaChoiceQuantity= prePro[4]
-    triviaRightChoicesQuantity= prePro[5]
-    triviaNwWinner= prePro[6]
-    triviaSuscritos= prePro[7]
-    triviasDesuscritos= prePro[8]
-    valor= prePro[9]
-    countViewInfo= prePro[10]
-    nviewInfo = prePro[11]
-    
+#    
+#    prePro = [triviaMaxComp, trivianPrizes, triviaQuestionType, triviaQuestionQuantity,triviaChoiceQuantity,triviaRightChoicesQuantity, triviaNwWinner, triviaSuscritos, triviasDesuscritos,valor, countViewInfo, nviewInfo]
+#    prePro = preprocessing.normalize(prePro, norm= 'l2').tolist()
+#    triviaMaxComp= prePro[0]
+#    trivianPrizes= prePro[1]
+#    triviaQuestionType= prePro[2]
+#    triviaQuestionQuantity= prePro[3]
+#    triviaChoiceQuantity= prePro[4]
+#    triviaRightChoicesQuantity= prePro[5]
+#    triviaNwWinner= prePro[6]
+#    triviaSuscritos= prePro[7]
+#    triviasDesuscritos= prePro[8]
+#    valor= prePro[9]
+#    countViewInfo= prePro[10]
+#    nviewInfo = prePro[11]
+#    
     dataOriginal = {
             'triviaMaxComp' : triviaMaxComp,
             'trivianPrizes' : trivianPrizes,
@@ -197,25 +197,25 @@ def get(n):
     
     dataNumerica = pd.DataFrame(dataOriginal)
     
-    #CON SCALADO
-    prePro = StandardScaler().fit_transform(dataNumerica)
-    columns = ['triviaMaxComp',
-            'trivianPrizes' ,
-            'triviaQuestionType' ,
-            'triviaQuestionQuantity' ,
-            'triviaChoiceQuantity' ,
-            'triviaRightChoicesQuantity',
-            'triviaNwWinner',
-            'triviaPorcentaje' ,
-            'triviaSuscritos',
-            'triviasDesuscritos' ,
-            'valorUser',
-            'countViewInfoUser',
-            'nviewInfo']
-    
-#    prePro = preprocessing.normalize(prePro)
-    
-    dataNumerica = pd.DataFrame(prePro,columns = columns)
+#    #CON SCALADO
+#    prePro = StandardScaler().fit_transform(dataNumerica)
+#    columns = ['triviaMaxComp',
+#            'trivianPrizes' ,
+#            'triviaQuestionType' ,
+#            'triviaQuestionQuantity' ,
+#            'triviaChoiceQuantity' ,
+#            'triviaRightChoicesQuantity',
+#            'triviaNwWinner',
+#            'triviaPorcentaje' ,
+#            'triviaSuscritos',
+#            'triviasDesuscritos' ,
+#            'valorUser',
+#            'countViewInfoUser',
+#            'nviewInfo']
+#    
+##    prePro = preprocessing.normalize(prePro)
+#    
+#    dataNumerica = pd.DataFrame(prePro,columns = columns)
     
     
     trivias = pd.concat([trivias, dataNumerica], axis=1,)
@@ -235,6 +235,18 @@ def get(n):
 #trivias1.to_csv(name1, index=False)
 
 
-name1 = str(n) + 'TriviasScaNor.csv'
+#name1 = str(n) + 'TriviasScaNor.csv'
+#trivias1 = get(n)
+#trivias1.to_csv(name1, index=False)
+    
+name1 = str(n) + 'Data1.csv'
+trivias1 = get(n)
+trivias1.to_csv(name1, index=False)
+
+name1 = str(n) + 'Data2.csv'
+trivias1 = get(n)
+trivias1.to_csv(name1, index=False)
+
+name1 = str(n) + 'Data3.csv'
 trivias1 = get(n)
 trivias1.to_csv(name1, index=False)
