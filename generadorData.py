@@ -28,7 +28,7 @@ rightChoicesQuantity = [1,2,3,4]
 nwWinner = [1,2,3,4,5,6,7,8,9,10]
 vistglobal = [1,2,5,10,15,20,25,30,35,40]
 
-n = 200
+n = 100
 
 def bagOfWords(listWord):
     count = CountVectorizer()
@@ -226,6 +226,7 @@ def get(n):
     pca = PCA(.9)
     pca.fit(dataNumerica)
     susc = pca.transform(dataNumerica)
+    
     dataNumerica = pd.DataFrame(susc)
     
     trivias = pd.concat([trivias, dataNumerica], axis=1,)
@@ -265,7 +266,11 @@ def get(n):
 #    trivias1 = get(n)
 #    trivias1.to_csv(name1, index=False)
     
-for i in range(4):
-    name1 = str(n)+ 'Data'+str(i+5) + '.csv'
-    trivias1 = get(n)
-    trivias1.to_csv(name1, index=False)
+#for i in range(4):
+#    name1 = str(n)+ 'Data'+str(i+5) + '.csv'
+#    trivias1 = get(n)
+#    trivias1.to_csv(name1, index=False)
+    
+#name1 = str(n)+ 'DataSinPCA.csv'
+#trivias1 = get(n)
+#trivias1.to_csv(name1, index=False)

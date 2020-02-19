@@ -7,14 +7,8 @@ Created on Mon Feb 10 14:10:29 2020
 """
 
 import pandas as pd
-from time import perf_counter 
-from sklearn.metrics import silhouette_score
 import math
-from sklearn.decomposition import PCA
 from sklearn.cluster import AgglomerativeClustering
-import matplotlib.pyplot as plt 
-import scipy.cluster.hierarchy as shc 
-from sklearn.preprocessing import normalize
 
 data1 = pd.read_csv('70Data0.csv')
 data2 = pd.read_csv('70Data1.csv')
@@ -38,29 +32,34 @@ data18 = pd.read_csv('200Data6.csv')
 data19 = pd.read_csv('200Data7.csv')
 data20 = pd.read_csv('200Data8.csv')
 
+# lista de datasets con 70 trivias cada una
 datos = [data1, data2, data3, data4, data5, data6, data7, data8, data9, data10]
-
+topeCentros = round(math.sqrt(data1.shape[0]/2))
 n = len(data1)
-m = 20      #numero de trivias suscritas
 
-m2 = round(m*0.45)
-m3 = round(m*0.75)
+# lista de datasets con 200 trivias cada una
+#topeCentros = round(math.sqrt(data11.shape[0]/2))
+#datos  = [data11, data12, data13, data14, data15, data16,data17, data18, data19, data20]
+#n = len(data11)
+
+#m = 20      #numero de trivias suscritas
+m = n//3
+m2 = round(m*0.40)
+m3 = round(m*0.65)
 nn = n-m
 
-k = 9   #numero total de sugerencias
-k2 = round(k*0.45)
-k3 = round(k*0.75)
+k = 25   #numero total de sugerencias
+k2 = round(k*0.40)
+k3 = round(k*0.65)
 
-kbig = round(9 *0.9)    #proporcion
-kmed = round(9 *0.05)
+kbig = round(k *0.7)    #proporcion
+kmed = round(k *0.25)
 ksmall = k - kbig - kmed
 
 #categorizando las trivias en suscritas y pub
 dataType = [0 for i in range(m)]    #trivias suscritas
 pub = [1 for i in range(nn)]        #trivias publicadas
 dataType.extend(pub)
-
-topeCentros = round(math.sqrt(data1.shape[0]/2))
 
 
 def getIndexCluster(gr, index, topeCentros):
@@ -113,7 +112,7 @@ def getData(j,i, realIndex, cuenta1, kbig, data, sugerencias):
 
 def getImportance(data1Sus, m2, m3):
     
-    categorias = data1Sus.columns.tolist()[:-2]
+    categorias = data1Sus.columns.tolist()[:-8]
 
     categ1 = []
     cantidades1 = []
@@ -129,6 +128,7 @@ def getImportance(data1Sus, m2, m3):
         #print(name)
         pos = data1Sus.groupby([name]).size().index.values.tolist()
         if (1 in pos):
+            #contamos las trivias que tengan seteado estge features en true (1)
             cuenta1 = data1Sus.groupby([name]).size()[1]
             if(cuenta1>= m3):
                 categ1.append(name)
@@ -143,7 +143,7 @@ def getImportance(data1Sus, m2, m3):
     preferencias1 = pd.DataFrame({'categoria': categ1, 'cantidad': cantidades1}).sort_values('cantidad',ascending=False)
     preferencias2 = pd.DataFrame({'categoria': categ2, 'cantidad': cantidades2}).sort_values('cantidad',ascending=False)
     preferencias3 = pd.DataFrame({'categoria': categ3, 'cantidad': cantidades3}).sort_values('cantidad',ascending=False)
-    
+#    print(' ')
     return preferencias1, preferencias2, preferencias3
 
 def getComparacion(sugerencia, suscritos): 
@@ -181,7 +181,7 @@ for i in range(10):
     index = grupos.index.values.tolist()
     indexClusters, notin = getIndexCluster(grupos, index,topeCentros)
     
-    #print(indexClusters)
+    print(notin)
     sugerencias = pd.DataFrame({})
     i1 = 0
     indexCluster = 0
@@ -213,44 +213,52 @@ for i in range(10):
         j2 = 0
         #print("Al menos un clusters sin trivias suscritas")
         while (i1 < k):
-            if (j < kbig):
+            if (j2 < ksmall):
+                if(len(notin) < indexCluster2+1):
+                    aux = ksmall -j2
+                    j2 = ksmall
+                    kbig = kbig + aux
+                else:
+                    realIndex = notin[indexCluster2]
+                    sugerencias, i1, j2 = getData( j2, i1, realIndex, cuenta1, ksmall, data, sugerencias)
+                    indexCluster2 += 1
+#                    print(len(sugerencias), '3')
+            elif (j < kbig):
                 realIndex = indexClusters[indexCluster]
                 sugerencias, i1, j = getData( j, i1, realIndex, cuenta1, kbig, data, sugerencias)
                 indexCluster += 1
+#                print(len(sugerencias), '1')
                 
             elif(j1 < kmed):
                 
                 realIndex = indexClusters[indexCluster]
                 sugerencias, i1, j1 = getData( j1, i1, realIndex, cuenta1, kmed, data, sugerencias)
                 indexCluster1 -= 1
-            
-            else:
-                realIndex = notin[indexCluster2]
-                sugerencias, i1, j2 = getData( j2, i1, realIndex, cuenta1, ksmall, data, sugerencias)
-                indexCluster2 += 1
+#                print(len(sugerencias), '2')
+                
 
         lista.append(sugerencias)
         
 
-data1Sus = data1[0:20]
+data1Sus = datos[0][0:m]
 
-data2Sus = data2[0:20]
+data2Sus = datos[0][0:m]
 
-data3Sus = data3[0:20]
+data3Sus = data3[0:m]
 
-data4Sus = data4[0:20]
+data4Sus = datos[0][0:m]
 
-data5Sus = data5[0:20]
+data5Sus = datos[0][0:m]
         
-data6Sus = data6[0:20]
+data6Sus = datos[0][0:m]
 
-data7Sus = data7[0:20]
+data7Sus = datos[0][0:m]
 
-data8Sus = data8[0:20]
+data8Sus = datos[0][0:m]
 
-data9Sus = data9[0:20]
+data9Sus = datos[0][0:m]
 
-data10Sus = data10[0:20]
+data10Sus = datos[0][0:m]
 #
 importante1Sus, medianamenteImpor1Sus, pocoImpor1Sus = getImportance(data1Sus,m2, m3)
 importante2Sus, medianamenteImpor2Sus, pocoImpor2Sus = getImportance(data2Sus,m2, m3)
@@ -285,13 +293,15 @@ pocoImporSug = [pocoImpor1Sug, pocoImpor2Sug, pocoImpor3Sug,pocoImpor4Sug,pocoIm
 for i in range(10):
     
     resultadoImportante, porcentajeImp = getComparacion(importanteSug[i], importanteSus[i])
-    resultadoMedioImportante, porcentajeMedioImp = getComparacion(medianamenteImporSus[i],medianamenteImporSug[i] )
-    resultadoPocoImportante, porcentajePocoImp = getComparacion(pocoImporSus[i], pocoImporSug[i] )
+    resultadoMedioImportante, porcentajeMedioImp = getComparacion(medianamenteImporSug[i], medianamenteImporSus[i] )
+    resultadoPocoImportante, porcentajePocoImp = getComparacion(pocoImporSug[i],pocoImporSus[i])
     print("\n")
     print("cluster ", i+1   )
     print(resultadoImportante, porcentajeImp)
     print(resultadoMedioImportante, porcentajeMedioImp)
     print(resultadoPocoImportante, porcentajePocoImp)
+
+
     
 ###Prueba de cota individual con 200 ejemplos
 #n = len(data11)
@@ -299,8 +309,8 @@ for i in range(10):
 #nn = n-m
 #
 #topeCentros = round(math.sqrt(data11.shape[0]/2))
-#datos2  = [data11, data12, data13, data14, data15, data16]
-#datos2  = [data17, data18, data19, data20]
+#datos2  = [data11, data12, data13, data14, data15, data16,data17, data18, data19, data20]
+
 #dataType = [0 for i in range(m)]    #trivias suscritas
 #pub = [1 for i in range(nn)]        #trivias publicadas
 #dataType.extend(pub)
@@ -313,4 +323,5 @@ for i in range(10):
 #    cuenta1 = data.groupby(['label','type'])
 #    grupos = cuenta1.size()
 #    print(grupos, '//n')
-    
+
+data20 = pd.read_csv('100DataSinPCA.csv')
