@@ -41,7 +41,7 @@ def bagOfWords(listWord):
     
     return final 
     
-def getAttr(lista, limite = 10):
+def getAttr(lista, limite = 5):
     lenlista = len(lista)
     if limite != 1 :
         nelementos = randint(1,limite)
@@ -74,7 +74,8 @@ def getPremios(premios, ganadores):
     
 def getPorcentaje(valor):
     nmax = valor
-    npersonas = randint(1,nmax)
+    npersonas = randint(0,8)
+    #npersonas = randint(1,nmax)
     return npersonas / nmax, npersonas
 
 def getColums(df, nfilas):
@@ -118,8 +119,9 @@ def get(n):
         triviaRightChoicesQuantityT = randint(1,triviaChoiceQuantityT)
         triviaNwWinnerT = getAttr(nwWinner,1)
         triviaPorcentajeT, triviasuscritosT = getPorcentaje(triviaMaxCompT)
-        desuscritos = round(triviaMaxCompT * 0.2)
-        triviasDesuscritosT = randint(0,desuscritos)
+        triviasDesuscritosT = randint(0,6)
+        #desuscritos = round(triviaMaxCompT * 0.2)
+        #triviasDesuscritosT = randint(0,desuscritos)
         triviaValor = randint(-2,4)
         if triviaValor == 0:
             vistasGlobales = 0
@@ -152,7 +154,39 @@ def get(n):
         triviasDesuscritos.append(triviasDesuscritosT)
         valor.append(triviaValor)
         countViewInfo.append(vistasGlobales)
+    
+    ############# BORRAR ########################
+    dataSinProcesar = {
+            'triviaMaxComp' : triviaMaxComp,
+            'trivianPrizes' : trivianPrizes,
+            'triviaQuestionType' : triviaQuestionType,
+            'triviaQuestionQuantity' : triviaQuestionQuantity,
+            'triviaChoiceQuantity' : triviaChoiceQuantity,
+            'triviaRightChoicesQuantity' : triviaRightChoicesQuantity,
+            'triviaNwWinner' : triviaNwWinner,
+            'triviaPorcentaje' : triviaPorcentaje,
+            'triviaSuscritos' : triviaSuscritos,
+            'triviasDesuscritos' : triviasDesuscritos,
+            'valorUser': valor,
+            'countViewInfoUser': countViewInfo,
+            'nviewInfo' : nviewInfo,
+            }
+    trivias = {
+            'segmentos': triviasSegmentos,
+            'actividades': triviasActividades,
+            'categorias': triviasCategoria,
+            'palabras': triviasPalabras,
+            'marcas': triviasMarcas,
+            'premios':  triviasPremios
+            }
+    trivias = pd.DataFrame(trivias)
+    dataSinProcesar = pd.DataFrame(dataSinProcesar)
+    triviasSinProcesar = pd.concat([trivias, dataSinProcesar], axis=1,)
+    
+    return triviasSinProcesar
         
+   ############# BORRAR ########################
+   
     triviasCategoria = bagOfWords(triviasCategoria) 
     triviasSegmentos = bagOfWords(triviasSegmentos) 
     triviasActividades = bagOfWords(triviasActividades) 
@@ -272,5 +306,5 @@ def get(n):
 #    trivias1.to_csv(name1, index=False)
     
 #name1 = str(n)+ 'DataSinPCA.csv'
-#trivias1 = get(n)
+trivias1 = get(n)
 #trivias1.to_csv(name1, index=False)
